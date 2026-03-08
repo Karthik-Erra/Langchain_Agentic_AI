@@ -17,8 +17,8 @@ The application provides a conversational interface and can be easily extended w
 - **│**
 - **├── app.py # Main Streamlit application**
 - **├── graph/ # LangGraph workflow logic**
-- **├── utils/ # Helper utilities**
-- **├── tools/ # Tool integrations (APIs, functions, etc.)**
+- **├── UI loader to load UI using streamlit**
+- **├── Display UI for UI using streamlit**
 - **├── config/ # Configuration files**
 - **└── requirements.txt # Python dependencies**
 
