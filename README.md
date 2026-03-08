@@ -13,14 +13,14 @@ The application provides a conversational interface and can be easily extended w
 
 ## Project Structure
 
-project/
-│
-├── app.py # Main Streamlit application
-├── graph/ # LangGraph workflow logic
-├── utils/ # Helper utilities
-├── tools/ # Tool integrations (APIs, functions, etc.)
-├── config/ # Configuration files
-└── requirements.txt # Python dependencies
+- **project/**
+- **│**
+- **├── app.py # Main Streamlit application**
+- **├── graph/ # LangGraph workflow logic**
+- **├── utils/ # Helper utilities**
+- **├── tools/ # Tool integrations (APIs, functions, etc.)**
+- **├── config/ # Configuration files**
+- **└── requirements.txt # Python dependencies**
 
 
 - **Create Virtual environment**
