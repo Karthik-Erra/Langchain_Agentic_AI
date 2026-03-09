@@ -1,33 +1,68 @@
 from langgraph.graph import StateGraph, START, END
 from src.langgraphagenticai.state.state import State
 from src.langgraphagenticai.nodes.basic_chatbot_node import BasicChatbotNode
-
+from src.langgraphagenticai.tools.search_tool import get_tools, create_tool_node
+from langgraph.prebuilt import tools_condition
+from src.langgraphagenticai.nodes.chatbot_with_tool_node import ChatbotWithToolNode
 
 
 class GraphBuilder:
-    def __init__(self,model):
+
+    def __init__(self, model):
         self.llm = model
-        self.graph_builder = StateGraph(State)
 
     def basic_chatbot_build_graph(self):
-        """
-        Builds a basic chatbot graph using Langgraph, This method initializes a chatbot node using the 
-        'BasicchatbotNode' class and interrates it into the graph. The chatbot node is set as both the entry and exit
-        poit of the graph
-        """
-        self.basic_chat_bot_node = BasicChatbotNode(self.llm)
 
-        self.graph_builder.add_node('chatbot',self.basic_chat_bot_node.process)
-        self.graph_builder.add_edge(START,'chatbot')
-        self.graph_builder.add_edge('chatbot',END)
+        graph_builder = StateGraph(State)
 
-        return self.graph_builder.compile()
+        basic_chat_bot_node = BasicChatbotNode(self.llm)
+
+        graph_builder.add_node("chatbot", basic_chat_bot_node.process)
+
+        graph_builder.add_edge(START, "chatbot")
+        graph_builder.add_edge("chatbot", END)
+
+        return graph_builder.compile()
+
+    def chatbot_with_tools_build_graph(self):
+
+        graph_builder = StateGraph(State)
+
+        # Tools
+        tools = get_tools()
+        tool_node = create_tool_node(tools)
+
+        # Chatbot
+        obj_chatbot_with_tool_node = ChatbotWithToolNode(self.llm)
+        chatbot_node = obj_chatbot_with_tool_node.create_chatbot(tools)
+
+        # Nodes
+        graph_builder.add_node("chatbot", chatbot_node)
+        graph_builder.add_node("tools", tool_node)
+
+        # Edges
+        graph_builder.add_edge(START, "chatbot")
+
+        graph_builder.add_conditional_edges(
+            "chatbot",
+            tools_condition,
+            {
+                "tools": "tools",
+                "__end__": END
+            }
+        )
+
+        graph_builder.add_edge("tools", "chatbot")
+
+        return graph_builder.compile()
 
     def setup_graph(self, usecase: str):
 
         if usecase == "Basic Chatbot":
             return self.basic_chatbot_build_graph()
 
+        elif usecase == "Chatbot with Web":
+            return self.chatbot_with_tools_build_graph()
+
         else:
             raise ValueError(f"Unsupported usecase: {usecase}")
-

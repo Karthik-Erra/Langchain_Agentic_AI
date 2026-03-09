@@ -3,3 +3,6 @@ langchain
 langchain-community
 langgraph
 langchain-groq
+tavily-python
+python-dotenv
+langchain-tavily

@@ -5,6 +5,7 @@ from src.langgraphagenticai.graph.graph_builder import GraphBuilder
 from src.langgraphagenticai.state.state import State
 from src.langgraphagenticai.nodes.basic_chatbot_node import BasicChatbotNode
 from src.langgraphagenticai.UI.streamlitui.display_result import DisplayResultStreamlit
+import traceback
 
 def load_langgraph_agenticai_app():
 
@@ -47,10 +48,11 @@ def load_langgraph_agenticai_app():
             ## Graph Builder
             graph_builder = GraphBuilder(model)
             try:
-                graph = graph_builder.setup_graph(usecase)
-                DisplayResultStreamlit(usecase,graph,user_message).display_result_on_ui()
+                compiled_graph = graph_builder.setup_graph(usecase)
+                DisplayResultStreamlit(usecase,compiled_graph,user_message).display_result_on_ui()
             except Exception as e:
-                st.error(f"Error: Graph setup failed - {e}")
+                st.error(f"Graph setup failed — {str(e)}")
+                st.text(traceback.format_exc())
                 return
 
 

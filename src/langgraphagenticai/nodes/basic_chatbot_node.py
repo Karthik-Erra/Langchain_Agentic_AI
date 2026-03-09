@@ -5,7 +5,7 @@ class BasicChatbotNode:
     def __init__(self, llm):
         self.llm = llm
 
-    def process(self, state):
+    def process(self, state:State):
 
         messages = state["messages"]
 
